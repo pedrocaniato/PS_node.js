@@ -1,16 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("file")
-export class File {
+@Entity("folder")
+export class Folder {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: "varchar" })
-  fileName: string;
+  name: string;
 
   @Column({ type: "integer" })
   userId: number;
 
   @Column({ type: "integer", nullable: true })
-  folderId: number | null;
+  parentId: number | null;
 }

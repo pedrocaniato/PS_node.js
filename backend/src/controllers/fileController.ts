@@ -11,23 +11,51 @@ class FileController {
 
   public async upload(req: Request, res: Response) {
     try {
+      console.log("UPLOAD: body:", req.body, "headers:", req.headers);
+      const folderIdValue = req.body.folderId
+        ? Number(req.body.folderId)
+        : null;
+      const folderId = isNaN(folderIdValue as number) ? null : folderIdValue;
+
       const response = await this.uploadFileUseCase.execute({
         fileName: req.headers.fileName as string,
         userId: Number(req.headers.user),
+        folderId,
       });
 
       res.status(200).send({ file: response });
-    } catch (error) {
-      res.status(500).send({ message: error.message });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Erro desconhecido";
+      res.status(500).send({ message });
     }
   }
 
   public async list(req: Request, res: Response) {
-    const response = await this.retriveFileUseCase.execute(
-      Number(req.headers.user)
-    );
+    try {
+      console.log("LIST: query:", req.query, "headers:", req.headers);
+      let folderId: number | null | undefined = null;
 
-    res.status(200).send({ files: response });
+      if (req.query.all === "true") {
+        folderId = undefined;
+      } else if (req.query.folderId !== undefined) {
+        const parsed = Number(req.query.folderId);
+        folderId = isNaN(parsed) ? null : parsed;
+      }
+
+      console.log("LIST: Final folderId filter:", folderId);
+
+      const response = await this.retriveFileUseCase.execute(
+        Number(req.headers.user),
+        folderId
+      );
+
+      res.status(200).send({ files: response });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Erro desconhecido";
+      res.status(500).send({ message });
+    }
   }
 }
 

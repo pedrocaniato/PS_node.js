@@ -1,6 +1,6 @@
 import express from "express";
 import { HttpExpressAdapter } from "./../adapters";
-import { userController, fileController } from "../controllers/";
+import { userController, fileController, folderController } from "../controllers/";
 import { authMiddleware } from "./middleware/authMiddleware";
 import { uploadFileMiddleware } from "./middleware/uploadFileMiddleware";
 
@@ -28,6 +28,19 @@ routes.get(
   "/files",
   authMiddleware.execute,
   HttpExpressAdapter.execute(fileController.list.bind(fileController))
+);
+
+//folders
+routes.post(
+  "/folder/create",
+  authMiddleware.execute,
+  HttpExpressAdapter.execute(folderController.create.bind(folderController))
+);
+
+routes.get(
+  "/folders",
+  authMiddleware.execute,
+  HttpExpressAdapter.execute(folderController.list.bind(folderController))
 );
 
 export default routes;

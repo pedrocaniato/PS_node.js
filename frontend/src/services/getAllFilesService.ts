@@ -1,11 +1,21 @@
 import { getConstants } from "@/constants";
 
-export const getAllFilesService = async () => {
+export const getAllFilesService = async (
+  folderId?: number | null,
+  all: boolean = false
+) => {
   const { url } = getConstants();
 
   const token = localStorage.getItem(getConstants().LOCAL_STORAGE_TOKEN);
 
-  const response = await fetch(`${url}/files`, {
+  let queryParams = "";
+  if (all) {
+    queryParams = "?all=true";
+  } else if (folderId !== undefined && folderId !== null) {
+    queryParams = `?folderId=${folderId}`;
+  }
+
+  const response = await fetch(`${url}/files${queryParams}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
