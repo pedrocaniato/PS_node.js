@@ -107,18 +107,28 @@ export default function Home() {
         <div className="flex items-center">
           <h1 className="font-bold text-2xl text-white">📁 Simple Storage</h1>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-white text-sm">Bem-vindo!</span>
-          <button
-            onClick={handleLogout}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-md transition-all duration-200 text-sm font-medium"
-          >
-            Sair
-          </button>
+        <div className="flex items-center space-x-6">
+          <div className="bg-white bg-opacity-15 px-4 py-2 rounded-full border border-white border-opacity-20 flex items-center space-x-2 shadow-inner">
+            <span className="text-white text-xs font-semibold uppercase tracking-wider opacity-80">
+              Total de Arquivos:
+            </span>
+            <span className="text-white text-xl font-bold leading-none">
+              {uploadedFiles.length}
+            </span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="text-white text-sm font-medium">Bem-vindo!</span>
+            <button
+              onClick={handleLogout}
+              className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-md transition-all duration-200 text-sm font-medium"
+            >
+              Sair
+            </button>
+          </div>
         </div>
       </header>
 
-{/* Main Content */}
+      {/* Main Content */}
       <div className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
