@@ -14,6 +14,7 @@ export default function Home() {
   const [files, setFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [filterType, setFilterType] = useState("todos");
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const isImage = (fileName: string) => {
     const ext = fileName.split(".").pop()?.toLowerCase();
@@ -51,6 +52,7 @@ export default function Home() {
 
   const handleChange = async (event) => {
     try {
+      setUploadError(null);
       setIsUploading(true);
       const files = event.target.files;
       if (!files || files.length === 0) return;
@@ -62,9 +64,10 @@ export default function Home() {
       setUploadedFiles((uploadedFiles) => [...uploadedFiles, response]);
 
       setFiles([]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Upload failed:", error);
-      router.push("/login");
+      setUploadError(error.message || "Erro ao fazer upload do arquivo.");
+      setFiles([]);
     } finally {
       setIsUploading(false);
     }
@@ -103,7 +106,7 @@ export default function Home() {
   return (
     <main className="flex h-screen flex-col bg-gray-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-amber-500 to-amber-600 w-full h-16 flex items-center justify-between px-6 shadow-md">
+      <header className="bg-gradient-to-r from-amber-500 to-amber-600 w-full h-16 flex items-center justify-between px-6 shadow-md shrink-0">
         <div className="flex items-center">
           <h1 className="font-bold text-2xl text-white">📁 Simple Storage</h1>
         </div>
@@ -162,6 +165,34 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* Feedback de erro */}
+          {uploadError && (
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md flex items-center justify-between shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center space-x-3">
+                <span className="text-2xl">⚠️</span>
+                <p className="text-sm font-medium text-red-800">{uploadError}</p>
+              </div>
+              <button
+                onClick={() => setUploadError(null)}
+                className="text-red-400 hover:text-red-500 transition-colors p-1"
+                title="Fechar"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
             {/* Upload em progresso */}
